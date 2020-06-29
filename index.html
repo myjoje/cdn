@@ -6,6 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>index</title>
+    <!--css部分-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/myjoje/cdn/css/normalize.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/myjoje/cdn/css/animate.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/myjoje/cdn/css/nprogress.css">
@@ -13,12 +14,23 @@
 
 </head>
 <body>
-<img src="https://cdn.jsdelivr.net/gh/myjoje/cdn/images/test/dog.jpg" style="width: 200px" alt="">
+<div id="app">
+    <img src="https://cdn.jsdelivr.net/gh/myjoje/cdn/images/test/dog.jpg" style="width: 200px" alt="">
+    <el-button icon="el-icon-search" type="primary">button</el-button>
+</div>
 
+<!--js部分-->
 <script src="https://cdn.jsdelivr.net/gh/myjoje/cdn/js/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/myjoje/cdn/js/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/myjoje/cdn/js/nprogress.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/myjoje/cdn/js/vue.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/myjoje/cdn/js/element-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/myjoje/cdn/js/layer/layer.js"></script>
+<script>
+    $(function () {
+        layer.msg("hello world ... ");
+    })
+    new Vue().$mount("#app");
+</script>
 </body>
 </html>
