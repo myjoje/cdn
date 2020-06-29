@@ -19,6 +19,7 @@
   "homepage": "https://github.com/myjoje/cdn#readme",
   "dependencies": {
     "animate.css": "^4.1.0",
+    "bootstrap": "^4.5.0",
     "bulma": "^0.9.0",
     "element-ui": "^2.13.2",
     "jquery": "^1.12.4",
