@@ -20,9 +20,11 @@
   "dependencies": {
     "@nutui/nutui": "^2.2.6",
     "animate.css": "^4.1.0",
+    "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
     "bulma": "^0.9.0",
     "element-ui": "^2.13.2",
+    "es6-promise": "^4.2.8",
     "jquery": "^1.12.4",
     "lodash": "^4.17.15",
     "moment": "^2.27.0",
