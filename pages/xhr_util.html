@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+
+<script>
+!function (window) {
+    function request(url, method, isAsync, data, successFn, errorFn) {
+        //后面的参数都没有传入
+        if (typeof data === "undefined") {
+            data = {};
+            successFn = function () {
+            };
+            errorFn = function () {
+            };
+        } else {
+            data = (data || {});
+            if (typeof successFn === "undefined") {
+                successFn = function () {
+                };
+                errorFn = function () {
+                };
+            } else if (typeof errorFn === "undefined") {
+                errorFn = function () {
+                };
+            }
+        }
+        console.log(data);
+        //参数key数组
+        var arr = [];
+        //处理参数
+        var params = "";
+        for (var key in data) {
+            arr.push(key);
+            params += (key + "=" + data[key] + "&");
+        }
+        params = params.substring(0, params.length - 1);
+
+        //创建XMLHttpRequest
+        var xhr;
+        if (window.XMLHttpRequest) {
+            xhr = new XMLHttpRequest();
+        } else {
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        //处理GET请求的url
+        if (method === "GET") {
+            url = arr.length === 0 ? url : url.concat("?").concat(params);
+        }
+
+        //初始化请求
+        xhr.open(method, url, isAsync);
+
+        // 设置 HTTP 请求头的值。必须在 open() 之后、send() 之前调用 setRequestHeader() 方法。
+        if (method === "POST") {
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.setRequestHeader("token", "myjoje");
+        }
+        //发送请求
+        xhr.send(method === "POST" ? params : null);
+
+        //异步请求
+        if (isAsync === true) {
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        return successFn(JSON.parse(xhr.responseText));
+                    } else {
+                        return errorFn(JSON.parse(xhr.responseText));
+                    }
+                }
+            }
+        } else {
+            //同步请求直接返回结果
+            return successFn(JSON.parse(xhr.responseText));
+        }
+    }
+
+    window.ajax = {
+        post: function (url, data, successFn, errorFn) {
+            request(url, "POST", true, data, successFn, errorFn);
+        },
+        syncPost: function (url, data, successFn, errorFn) {
+            request(url, "POST", false, data, successFn, errorFn);
+        },
+        get: function (url, data, successFn, errorFn) {
+            request(url, "GET", true, data, successFn, errorFn);
+        },
+        syncGet: function (url, data, successFn, errorFn) {
+            request(url, "GET", false, data, successFn, errorFn);
+        }
+    };
+}(window)
+</script>
+
+</body>
+</html>
