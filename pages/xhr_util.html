@@ -11,119 +11,125 @@
 
 
 <script>
-!function (window) {
-    function request(url, method, isAsync, data, successFn, errorFn, isJson) {
-        //后面的参数都没有传入
-        if (typeof data === "undefined") {
-            data = {};
-            successFn = function () {
-            };
-            errorFn = function () {
-            };
-        } else {
-            data = (data || {});
-            if (typeof data === "function") {
-                isJson = errorFn;
-                errorFn = successFn;
-                successFn = data;
+    !function (window) {
+        function request(url, method, isAsync, data, successFn, errorFn, isJson) {
+            //后面的参数都没有传入
+            if (typeof data === "undefined") {
                 data = {};
-            } else if (typeof successFn === "undefined") {
                 successFn = function () {
                 };
                 errorFn = function () {
                 };
-            } else if (typeof errorFn === "undefined") {
-                errorFn = function () {
-                };
-            }
-        }
-        //处理参数
-        var params = "";
-        for (var key in data) {
-            params += (key + "=" + data[key] + "&");
-        }
-        var len = params.length;
-        params = len > 0 ? params.substring(0, len - 1) : params;
-
-        //创建XMLHttpRequest
-        var xhr;
-        if (window.XMLHttpRequest) {
-            xhr = new XMLHttpRequest();
-        } else {
-            xhr = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        //处理GET请求的url
-        if (method === "GET") {
-            url = len > 0 ? url.concat("?").concat(params) : url;
-        }
-
-        //初始化请求
-        xhr.open(method, url, isAsync);
-
-        // 设置 HTTP 请求头的值。必须在 open() 之后、send() 之前调用 setRequestHeader() 方法。
-        if (method === "POST") {
-            if (typeof isJson === "undefined") {
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             } else {
-                //json请求
-                xhr.setRequestHeader("Content-Type", "application/json");
-                params = len > 0 ? JSON.stringify(data) : null;
-            }
-        }
-
-        //发送请求
-        xhr.send(method === "POST" ? params : null);
-
-        //异步请求
-        if (isAsync === true) {
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        return successFn(JSON.parse(xhr.responseText));
-                    } else {
-                        return errorFn(JSON.parse(xhr.responseText));
-                    }
+                data = (data || {});
+                if (typeof data === "function") {
+                    isJson = errorFn;
+                    errorFn = successFn;
+                    successFn = data;
+                    data = {};
+                } else if (typeof successFn === "undefined") {
+                    successFn = function () {
+                    };
+                    errorFn = function () {
+                    };
+                } else if (typeof errorFn === "undefined") {
+                    errorFn = function () {
+                    };
                 }
             }
-        } else {
-            //同步请求直接返回结果
-            return successFn(JSON.parse(xhr.responseText));
-        }
-    }
+            //处理参数
+            var params = "";
+            for (var key in data) {
+                params += (key + "=" + data[key] + "&");
+            }
+            var len = params.length;
+            params = len > 0 ? params.substring(0, len - 1) : params;
 
-    /**
-     * url: 访问路径
-     * data: 请求参数null或{name: "jack", age: 18}
-     * successFn: 成功回调function(res){}
-     * errorFn: 失败回调function(err){}
-     */
-    window.ajax = {
-        //post请求
-        post: function (url, data, successFn, errorFn) {
-            request(url, "POST", true, data, successFn, errorFn);
-        },
-        //post同步请求
-        postSync: function (url, data, successFn, errorFn) {
-            request(url, "POST", false, data, successFn, errorFn);
-        },
-        //post,发送json请求
-        postJson: function (url, data, successFn, errorFn) {
-            request(url, "POST", true, data, successFn, errorFn, true);
-        },
-        //get请求
-        get: function (url, data, successFn, errorFn) {
-            request(url, "GET", true, data, successFn, errorFn);
-        },
-        //get同步请求
-        getSync: function (url, data, successFn, errorFn) {
-            request(url, "GET", false, data, successFn, errorFn);
-        }
-    };
-}(window)
+            //创建XMLHttpRequest
+            var xhr;
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else {
+                xhr = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            //处理GET请求的url
+            if (method === "GET") {
+                url = len > 0 ? url.concat("?").concat(params) : url;
+            }
 
-ajax.post("http://lily.myjoje.org/sa/tag/get", function (res) {
-    console.log(res);
-});
+            //初始化请求
+            xhr.open(method, url, isAsync);
+
+            // 设置 HTTP 请求头的值。必须在 open() 之后、send() 之前调用 setRequestHeader() 方法。
+            if (method === "POST") {
+                if (typeof isJson === "undefined") {
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                } else {
+                    //json请求
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    params = len > 0 ? JSON.stringify(data) : null;
+                }
+            }
+
+            //发送请求
+            xhr.send(method === "POST" ? params : null);
+
+            //异步请求
+            if (isAsync === true) {
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            return successFn(JSON.parse(xhr.responseText));
+                        } else {
+                            if (typeof errorFn !== "undefined") {
+                                return errorFn(xhr.responseText);
+                            }
+                        }
+                    }
+                }
+            } else {
+                //同步请求直接返回结果
+                return successFn(JSON.parse(xhr.responseText));
+            }
+        }
+
+        /**
+         * url: 访问路径
+         * data: 请求参数null或{name: "jack", age: 18}
+         * successFn: 成功回调function(res){}
+         * errorFn: 失败回调function(err){}
+         */
+        window.ajax = {
+            //post请求
+            post: function (url, data, successFn, errorFn) {
+                request(url, "POST", true, data, successFn, errorFn);
+            },
+            //post同步请求
+            postSync: function (url, data, successFn, errorFn) {
+                request(url, "POST", false, data, successFn, errorFn);
+            },
+            //post,发送json请求
+            postJson: function (url, data, successFn, errorFn) {
+                request(url, "POST", true, data, successFn, errorFn, true);
+            },
+            //get请求
+            get: function (url, data, successFn, errorFn) {
+                request(url, "GET", true, data, successFn, errorFn);
+            },
+            //get同步请求
+            getSync: function (url, data, successFn, errorFn) {
+                request(url, "GET", false, data, successFn, errorFn);
+            }
+        };
+    }(window)
+
+    // ajax.post("http://lily.myjoje.org/sa/tag/get", function (res) {
+    //     console.log(res);
+    // });
+
+    ajax.post("/sss", function (res) {
+        console.log(res);
+    })
 </script>
 
 </body>
